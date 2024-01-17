@@ -2,6 +2,7 @@ import os
 from openai import OpenAI
 import sys
 import json
+import sys
 
 from scrape_pages import scrape_arxiv_new_submissions
 from scrape_pages import scrape_arxiv_abstract
@@ -63,6 +64,21 @@ def get_last_paper_id(papers, last_paper_file):
             return i
     return None
 
+def save_first_arxiv_number(papers, last_paper_file):
+    """
+    Save the first arXiv number from the list of papers to a file.
+
+    :param papers: List of tuples containing (arxiv_number, title)
+    :param last_paper_file: File path to save the first arXiv number
+    """
+    if papers:  # Check if the papers list is not empty
+        first_arxiv_number = papers[0][0]  # Get the first arXiv number
+        with open(last_paper_file, 'w') as file:
+            file.write(first_arxiv_number + '\n')  # Write the arXiv number to the file
+        print(f"The first arXiv number has been saved to {last_paper_file}")
+    else:
+        print("The papers list is empty. No arXiv number was saved.")
+
 if __name__ == "__main__":
     #papers = [...]  # Your list of papers (arxiv_number, title)
     arxiv_url = 'https://arxiv.org/list/astro-ph/new'
@@ -71,10 +87,14 @@ if __name__ == "__main__":
     topics_file = "topics.txt"
     last_paper_file = "last_paper.txt"
     last_paper_id = get_last_paper_id(papers, last_paper_file)
+    if last_paper_id == 0:
+        print("The arxiv has already been successfully scraped up-to-date. Exiting...")
+        sys.exit(0)
     papers=papers[:last_paper_id]
     print(papers)
     paper_titles = [title for _, title in papers]
     related_titles = categorize_papers(paper_titles, topics_file)
+    save_first_arxiv_number(papers, last_paper_file)
     
     # Get the arXiv numbers of the related papers
     related_arxiv_numbers = [arxiv for arxiv, title in papers if title in related_titles]
