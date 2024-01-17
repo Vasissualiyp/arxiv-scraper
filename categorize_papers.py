@@ -1,15 +1,15 @@
 import os
 from openai import OpenAI
 import sys
+import json
+
 from scrape_pages import scrape_arxiv_new_submissions
 from scrape_pages import scrape_arxiv_abstract
 
 # Initialize the OpenAI API client
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-# If the environment variable is not set, you can uncomment the following line and set the API key directly
-# openai.api_key = "your-api-key-here"
+model_engine = "gpt-3.5-turbo"
 
-model_engine = "gpt-4"
 
 def categorize_papers(paper_titles, topics_file):
     # Read the topics
@@ -32,10 +32,10 @@ def categorize_papers(paper_titles, topics_file):
                 {"role": "user", "content": f"""
                 Given the list of topics:
                 {topics}
-                
+
                 Please indicate if the following paper title is related to any of the topics listed above:
                 Paper Title: {title}
-                
+
                 Respond with 'Yes' if it is related, otherwise respond with 'No'.
                 """}
             ]
@@ -52,17 +52,33 @@ def categorize_papers(paper_titles, topics_file):
 
     return related_papers
 
+def get_last_paper_id(papers, last_paper_file):
+
+    # Extract the arxiv number of the last paper
+    with open(last_paper_file, 'r') as file:
+        last_paper_arxiv = file.readline().strip()
+     
+    for i in range(len(papers)):
+        if papers[i][0] == last_paper_arxiv:
+            return i
+    return None
+
 if __name__ == "__main__":
-    # Assuming 'papers' is a list of tuples (arxiv_number, title)
+    #papers = [...]  # Your list of papers (arxiv_number, title)
     arxiv_url = 'https://arxiv.org/list/astro-ph/new'
     papers = scrape_arxiv_new_submissions(arxiv_url)
 
-    n = int(sys.argv[1]) if len(sys.argv) > 1 else len(papers)
-    topics_file = "topics.txt"  # Replace with your actual topics file path
+    topics_file = "topics.txt"
+    last_paper_file = "last_paper.txt"
+    last_paper_id = get_last_paper_id(papers, last_paper_file)
+    papers=papers[:last_paper_id]
+    print(papers)
+    paper_titles = [title for _, title in papers]
+    related_titles = categorize_papers(paper_titles, topics_file)
+    
+    # Get the arXiv numbers of the related papers
+    related_arxiv_numbers = [arxiv for arxiv, title in papers if title in related_titles]
 
-    paper_titles = [title for _, title in papers[:n]]
-    related_papers = categorize_papers(paper_titles, topics_file)
-
-    print("Related papers:")
-    for paper in related_papers:
-        print(paper)
+    # Write related papers to a JSON file to be used by the next script
+    with open('related_papers.json', 'w') as file:
+        json.dump(related_arxiv_numbers, file)
