@@ -47,7 +47,7 @@ def create_final_latex_document(template_file, papers_file, output_file):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-def create_tex_main(config)
+def create_tex_main(config):
     # Load the related papers from the JSON file
     template_tex = config.TemplateTex 
     related_papers_json = config.RelatedPapersJson 

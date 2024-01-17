@@ -24,7 +24,8 @@ class Config:
     def save(self):
         with open(self.config_file, 'w') as configfile:
             self.parser.write(configfile)
-def extract_configuration(config_file)
+
+def extract_configuration(config_file):
     # Example usage
     with open(config_file, 'r') as file:
         line = file.read()

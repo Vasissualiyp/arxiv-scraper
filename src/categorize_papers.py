@@ -80,11 +80,11 @@ def save_first_arxiv_number(papers, last_paper_file):
     else:
         print("The papers list is empty. No arXiv number was saved.")
 
-def ai_categorization_main(papers, config)
+def ai_categorization_main(papers, config):
     #papers = [...]  # Your list of papers (arxiv_number, title)
     topics_file = config.TopicsFile
     last_paper_file = config.LastPaperFile
-    related_papers_json = config.OutputTexFile
+    related_papers_json = config.RelatedPapersJson
 
     last_paper_id = get_last_paper_id(papers, last_paper_file)
     if last_paper_id == 0:
