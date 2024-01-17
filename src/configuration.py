@@ -24,21 +24,19 @@ class Config:
     def save(self):
         with open(self.config_file, 'w') as configfile:
             self.parser.write(configfile)
+def extract_configuration(config_file)
+    # Example usage
+    with open(config_file, 'r') as file:
+        line = file.read()
+    print(line)
+    config = Config(config_file)
+    
+    # Change the locations of the documents to their respecitve folders
+    config.TopicsFile = os.path.join('config', config.TopicsFile)
+    config.TemplateTex = os.path.join('config', config.TemplateTex)
+    config.LastPaperFile = os.path.join('workdir', config.LastPaperFile)
+    config.RelatedPapersJson  = os.path.join('workdir', config.RelatedPapersJson )
+    config.RelatedPapersContent  = os.path.join('workdir', config.RelatedPapersContent )
+    config.OutputTexFile = os.path.join('workdir', config.OutputTexFile)
 
-
-# Example usage
-config_file = 'config/config.ini'  # Replace with your config file path
-with open(config_file, 'r') as file:
-    line = file.read()
-print(line)
-config = Config(config_file)
-
-# Change the locations of the documents to their respecitve folders
-config.TopicsFile = os.path.join('config', config.TopicsFile)
-config.TemplateTex = os.path.join('config', config.TemplateTex)
-config.LastPaperFile = os.path.join('workdir', config.LastPaperFile)
-config.RelatedPapersJson  = os.path.join('workdir', config.RelatedPapersJson )
-config.RelatedPapersContent  = os.path.join('workdir', config.RelatedPapersContent )
-config.OutputTexFile = os.path.join('workdir', config.OutputTexFile)
-
-print(config.TopicsFile)
+    return config
