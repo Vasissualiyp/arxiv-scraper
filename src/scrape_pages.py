@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from configuration import Config
 
 def scrape_arxiv_new_submissions(url):
     response = requests.get(url)

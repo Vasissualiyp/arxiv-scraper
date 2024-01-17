@@ -4,6 +4,7 @@ import sys
 import json
 import sys
 
+from configuration import Config
 from scrape_pages import scrape_arxiv_new_submissions
 from scrape_pages import scrape_arxiv_abstract
 
@@ -79,13 +80,14 @@ def save_first_arxiv_number(papers, last_paper_file):
     else:
         print("The papers list is empty. No arXiv number was saved.")
 
-if __name__ == "__main__":
+def ai_main()
     #papers = [...]  # Your list of papers (arxiv_number, title)
     arxiv_url = 'https://arxiv.org/list/astro-ph/new'
     papers = scrape_arxiv_new_submissions(arxiv_url)
 
-    topics_file = "topics.txt"
-    last_paper_file = "last_paper.txt"
+    topics_file = "config/topics.txt"
+    last_paper_file = "workdir/last_paper.txt"
+    related_papers_json = "workdir/related_papers.json"
     last_paper_id = get_last_paper_id(papers, last_paper_file)
     if last_paper_id == 0:
         print("The arxiv has already been successfully scraped up-to-date. Exiting...")
@@ -101,6 +103,9 @@ if __name__ == "__main__":
     related_papers = {arxiv: title for arxiv, title in papers if title in related_titles}
 
     # Write related papers to a JSON file to be used by the next script
-    with open('related_papers.json', 'w') as file:
+    with open(related_papers_json, 'w') as file:
         #json.dump(related_arxiv_numbers, file)
         json.dump(related_papers, file)
+
+if __name__ == "__main__":
+    ai_main()

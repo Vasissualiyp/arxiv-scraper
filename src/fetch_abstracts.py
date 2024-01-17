@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import os
+from configuration import Config
 
 def fetch_arxiv_abstract(arxiv_number):
     abstract_url = f'https://arxiv.org/abs/{arxiv_number}'
@@ -13,6 +14,7 @@ def fetch_arxiv_abstract(arxiv_number):
     if abstract_block:
         return abstract_block.text.replace('Abstract:', '').strip()
     return None
+
 def create_final_latex_document(template_file, papers_file, output_file):
     """
     Combines a LaTeX template file with a file containing LaTeX content for papers,
@@ -45,11 +47,12 @@ def create_final_latex_document(template_file, papers_file, output_file):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-
-
-if __name__ == "__main__":
+def create_tex_main()
     # Load the related papers from the JSON file
-    with open('related_papers.json', 'r') as file:
+    related_papers_json = 'related_papers.json'
+    related_papers_tex = 'related_papers.tex'
+    related_papers_content = 'related_papers_content.tex'
+    with open(related_papers_json, 'r') as file:
         related_papers = json.load(file)
 
     # Fetch the abstracts
@@ -60,7 +63,7 @@ if __name__ == "__main__":
             papers_info.append((title, arxiv_number, abstract))
 
     # Write to a LaTeX file
-    with open('related_papers_content.tex', 'w') as tex_file:
+    with open(related_papers_content, 'w') as tex_file:
         for title, arxiv_number, abstract in papers_info:
             title_line = f"\\section{{{title}}}\n"
             link_line = f"\\url{{https://arxiv.org/pdf/{arxiv_number}.pdf}}{{arXiv:{arxiv_number}}}\n\n"
@@ -68,5 +71,8 @@ if __name__ == "__main__":
             tex_file.write(title_line + link_line + abstract_line)
 
     # Example usage:
-    create_final_latex_document('template.tex', 'related_papers_content.tex', 'related_papers.tex')
+    create_final_latex_document(template_tex, related_papers_content, related_papers_tex)
 
+
+if __name__ == "__main__":
+    create_tex_main()
