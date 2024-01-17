@@ -48,21 +48,23 @@ def scrape_arxiv_abstract(arxiv_number):
     abstract_block = soup.find('blockquote', class_='abstract mathjax')
     if abstract_block:
         # Clean the abstract text by removing the "Abstract" word and leading/trailing whitespaces
-        abstract_text = abstract_block.text.replace('Abstract', '').strip()
+        abstract_text = abstract_block.text.replace('Abstract:', '').strip()
         return abstract_text
     else:
         return "Abstract not found."
 
 
-arxiv_url = 'https://arxiv.org/list/astro-ph/new'
-papers = scrape_arxiv_new_submissions(arxiv_url)
-
-# Output the first few papers to check
-for paper in papers[:5]:
-    print(f"Arxiv Number: {paper[0]}, Title: {paper[1]}")
-
-# Example usage:
-# Let's say the first element of the papers array has the arXiv number '2401.06841'
-arxiv_number_of_first_paper = papers[0][0]  # Assuming 'papers' is the list of tuples (arxiv_number, title)
-abstract = scrape_arxiv_abstract(arxiv_number_of_first_paper)
-print(abstract)
+if __name__ == "__main__":
+    arxiv_url = 'https://arxiv.org/list/astro-ph/new'
+    papers = scrape_arxiv_new_submissions(arxiv_url)
+    
+    # Output the first few papers to check
+    for paper in papers[:5]:
+        print(f"Arxiv Number: {paper[0]}, Title: {paper[1]}")
+    
+    # Example usage:
+    # Let's say the first element of the papers array has the arXiv number '2401.06841'
+    arxiv_number_of_first_paper = papers[1][0]  # Assuming 'papers' is the list of tuples (arxiv_number, title)
+    print(arxiv_number_of_first_paper)
+    abstract = scrape_arxiv_abstract(arxiv_number_of_first_paper)
+    print(abstract)

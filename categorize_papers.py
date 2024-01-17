@@ -78,7 +78,9 @@ if __name__ == "__main__":
     
     # Get the arXiv numbers of the related papers
     related_arxiv_numbers = [arxiv for arxiv, title in papers if title in related_titles]
+    related_papers = {arxiv: title for arxiv, title in papers if title in related_titles}
 
     # Write related papers to a JSON file to be used by the next script
     with open('related_papers.json', 'w') as file:
-        json.dump(related_arxiv_numbers, file)
+        #json.dump(related_arxiv_numbers, file)
+        json.dump(related_papers, file)
