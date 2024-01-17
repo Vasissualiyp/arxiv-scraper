@@ -80,14 +80,14 @@ def save_first_arxiv_number(papers, last_paper_file):
     else:
         print("The papers list is empty. No arXiv number was saved.")
 
-def ai_main()
+def ai_categorization_main(config)
     #papers = [...]  # Your list of papers (arxiv_number, title)
-    arxiv_url = 'https://arxiv.org/list/astro-ph/new'
+    arxiv_url = config.ArxivURL
     papers = scrape_arxiv_new_submissions(arxiv_url)
+    topics_file = config.TopicsFile
+    last_paper_file = config.LastPaperFile
+    related_papers_json = config.OutputTexFile
 
-    topics_file = "config/topics.txt"
-    last_paper_file = "workdir/last_paper.txt"
-    related_papers_json = "workdir/related_papers.json"
     last_paper_id = get_last_paper_id(papers, last_paper_file)
     if last_paper_id == 0:
         print("The arxiv has already been successfully scraped up-to-date. Exiting...")
@@ -108,4 +108,4 @@ def ai_main()
         json.dump(related_papers, file)
 
 if __name__ == "__main__":
-    ai_main()
+    ai_categorization_main()

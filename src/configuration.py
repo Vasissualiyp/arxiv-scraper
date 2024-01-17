@@ -8,13 +8,22 @@ class Config:
     def __init__(self, config_file):
         self.parser = configparser.ConfigParser()
         self.parser.read(config_file)
+        self.config_file = config_file
 
     def __getattr__(self, name):
-        # Convert attribute name to the same case as INI keys
-        name = name.lower()
         if self.parser.has_option('DEFAULT', name):
             return self.parser.get('DEFAULT', name)
         raise AttributeError(f"No such configuration option: {name}")
+
+    def __setattr__(self, name, value):
+        if name in ["parser", "config_file"]:
+            super().__setattr__(name, value)
+        else:
+            self.parser.set('DEFAULT', name, value)
+
+    def save(self):
+        with open(self.config_file, 'w') as configfile:
+            self.parser.write(configfile)
 
 
 # Example usage
@@ -24,10 +33,12 @@ with open(config_file, 'r') as file:
 print(line)
 config = Config(config_file)
 
-# Now you can access your configuration settings like this
-arxiv_url = config.ArxivURL
-topics_file = config.TopicsFile
-last_paper_file = config.LastPaperFile
-output_tex_file = config.OutputTexFile
+# Change the locations of the documents to their respecitve folders
+config.TopicsFile = os.path.join('config', config.TopicsFile)
+config.TemplateTex = os.path.join('config', config.TemplateTex)
+config.LastPaperFile = os.path.join('workdir', config.LastPaperFile)
+config.RelatedPapersJson  = os.path.join('workdir', config.RelatedPapersJson )
+config.RelatedPapersContent  = os.path.join('workdir', config.RelatedPapersContent )
+config.OutputTexFile = os.path.join('workdir', config.OutputTexFile)
 
-print(arxiv_url)
+print(config.TopicsFile)

@@ -47,11 +47,12 @@ def create_final_latex_document(template_file, papers_file, output_file):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-def create_tex_main()
+def create_tex_main(config)
     # Load the related papers from the JSON file
-    related_papers_json = 'related_papers.json'
-    related_papers_tex = 'related_papers.tex'
-    related_papers_content = 'related_papers_content.tex'
+    template_tex = config.TemplateTex 
+    related_papers_json = config.RelatedPapersJson 
+    related_papers_tex = config.OutputTexFile 
+    related_papers_content = config.RelatedPapersContent 
     with open(related_papers_json, 'r') as file:
         related_papers = json.load(file)
 
