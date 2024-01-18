@@ -31,3 +31,4 @@ Edit the `config.ini` file in the `config` folder to customize settings:
 - `TopicsFile` and `TemplateTex` should be in the `config` folder.
 - Other files will be in the `workdir` folder.
 - Change the arXiv section (default is astrophysics, astro-ph) and topics of interest in `topics.txt` or the specified file in `config.ini`.
+- Change the ChatGPT model (so far `gpt-3.5-turbo` is the default, which is cheap but sometimes gets things wrong. `gpt-4` is better but more expensive)
