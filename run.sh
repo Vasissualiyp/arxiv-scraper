@@ -8,7 +8,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "$SCRIPT_DIR"
 
 # Run the script
-source ./env/bin/bash
+source ./env/bin/activate
 python ./src/main.py
 
 mv ./workdir/related_papers.tex "$OUTPUT_FOLDER"
