@@ -19,6 +19,7 @@ This script sets up the environment, asks for your OpenAI API key, and installs 
 To manually run the script, execute:
 `run.sh`
 This script scrapes arXiv for paper titles, uses ChatGPT to identify relevant papers, extracts their abstracts, and compiles them into a LaTeX document in `workdir`.
+After that, it moves the compiled document to a folder, specified in the script. You can change this folder inside of `run.sh`. By default, it moves it into the folder where the script is at.
 
 ## Automated Daily Execution
 

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# This is optional directory where the final tex file will be located. You can change the location of the final file in the run.sh script
+mkdir output 
+
 # Create python environment
 if [ -d "$ENV_FOLDER" ]; then
 	echo "Skipping creation of the environment..."
