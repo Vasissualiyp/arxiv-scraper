@@ -10,10 +10,8 @@ from scrape_pages import scrape_arxiv_abstract
 
 # Initialize the OpenAI API client
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-model_engine = "gpt-3.5-turbo"
 
-
-def categorize_papers(paper_titles, topics_file):
+def categorize_papers(paper_titles, topics_file, model_engine):
     # Read the topics
     try:
         with open(topics_file, 'r') as file:
@@ -84,10 +82,11 @@ def save_first_arxiv_number(papers, last_paper_file):
         print("The papers list is empty. No arXiv number was saved.")
 
 def ai_categorization_main(papers, config):
-    #papers = [...]  # Your list of papers (arxiv_number, title)
+    # Extract config
     topics_file = config.TopicsFile
     last_paper_file = config.LastPaperFile
     related_papers_json = config.RelatedPapersJson
+    model_engine = config.ChatGPTModel
 
     last_paper_id = get_last_paper_id(papers, last_paper_file)
     if last_paper_id == 0:
@@ -96,7 +95,7 @@ def ai_categorization_main(papers, config):
     papers=papers[:last_paper_id]
     print(papers)
     paper_titles = [title for _, title in papers]
-    related_titles = categorize_papers(paper_titles, topics_file)
+    related_titles = categorize_papers(paper_titles, topics_file, model_engine)
     save_first_arxiv_number(papers, last_paper_file)
     
     # Get the arXiv numbers of the related papers
