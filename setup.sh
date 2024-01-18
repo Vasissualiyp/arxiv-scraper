@@ -6,9 +6,9 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 read -p "Do you want to save the outputs (compiled tex files) in the output folder? (y/n): " create_output_dir
 if [[ "$create_output_dir" == "y" ]]; then
     mkdir output 
-		echo "The output will be saved in ${SCRIPT_DIR}/output/"
+    echo "The output will be saved in ${SCRIPT_DIR}/output/"
 else
-		echo "You will have to manually change the folder where the output tex file is saved in run.sh"
+    echo "You will have to manually change the folder where the output tex file is saved in run.sh"
 fi
 
 # Create python environment
