@@ -1,29 +1,32 @@
 # ArXiv Abstract Scraper and Compiler
 
-This script is designed to efficiently gather abstracts of the latest arXiv papers, filtering them based on topics relevant to your specific field of interest. The relevance of papers is determined using the ChatGPT API. This tool compiles the selected abstracts into a single LaTeX document, streamlining your research process by providing you with information that is directly pertinent to your area of study.
+This script automates the process of scraping the newest arXiv papers' abstracts based on topics relevant to your chosen field. The relevance of papers is determined using the ChatGPT API. It then compiles these abstracts into a single LaTeX document, streamlining access to information pertinent to your research area.
 
 ## Installation
 
 ### Prerequisites
 - Python installed with pip
-- A valid OpenAI API key for accessing the ChatGPT API
+- An OpenAI API key for accessing the ChatGPT API
 
-### Steps
-1. Obtain your OpenAI API key. Instructions can be found [here](https://www.howtogeek.com/885918/how-to-get-an-openai-api-key/).
-2. Execute the setup script by running:
+### Setup
+1. Obtain an OpenAI API key following instructions [here](https://www.howtogeek.com/885918/how-to-get-an-openai-api-key/).
+2. Run the setup script:
 `setup.sh`
-This script will guide you through the necessary steps, including entering your OpenAI API key, creating a Python virtual environment, and installing all required Python libraries.
+This script sets up the environment, asks for your OpenAI API key, and installs necessary Python libraries.
 
 ## Execution
 
-To run the script, execute the following command:
+To manually run the script, execute:
 `run.sh`
-This command initiates the process of scraping arXiv for paper titles, using ChatGPT to identify papers relevant to your specified topics, extracting their abstracts, and compiling them into a LaTeX document. The document is then saved in the `workdir` directory, after which it is transferred to a user-specified folder.
+This script scrapes arXiv for paper titles, uses ChatGPT to identify relevant papers, extracts their abstracts, and compiles them into a LaTeX document in `workdir`.
+
+## Automated Daily Execution
+
+During setup, you can opt to schedule `run.sh` to execute daily at a specified time. This is done through cron, a time-based job scheduler in Unix-like operating systems. If you choose this option, the script will prompt you to specify the time for daily execution in HH:MM format. This feature is especially useful if the script is deployed on a server.
 
 ## Configuration
 
-Customize your experience by modifying the `config.ini` file located in the `config` folder. Important details:
-- `TopicsFile` and `TemplateTex` must reside in the `config` folder.
-- All other files will be stored in the `workdir` folder.
-- The `config.ini` file allows you to specify the arXiv section of interest. The default is astrophysics (astro-ph).
-- You can modify your topics of interest in `topics.txt` (located in the `config` folder), or any file specified in `config.ini`. The default topics include early stars and hydro simulations.
+Edit the `config.ini` file in the `config` folder to customize settings:
+- `TopicsFile` and `TemplateTex` should be in the `config` folder.
+- Other files will be in the `workdir` folder.
+- Change the arXiv section (default is astrophysics, astro-ph) and topics of interest in `topics.txt` or the specified file in `config.ini`.
