@@ -56,14 +56,17 @@ def categorize_papers(paper_titles, topics_file):
 
 def get_last_paper_id(papers, last_paper_file):
 
-    # Extract the arxiv number of the last paper
-    with open(last_paper_file, 'r') as file:
-        last_paper_arxiv = file.readline().strip()
-     
-    for i in range(len(papers)):
-        if papers[i][0] == last_paper_arxiv:
-            return i
-    return None
+    if os.path.exists(last_paper_file):
+        # Extract the arxiv number of the last paper
+        with open(last_paper_file, 'r') as file:
+            last_paper_arxiv = file.readline().strip()
+         
+        for i in range(len(papers)):
+            if papers[i][0] == last_paper_arxiv:
+                return i
+        return None
+    else:
+        return len(papers)
 
 def save_first_arxiv_number(papers, last_paper_file):
     """
@@ -100,7 +103,9 @@ def ai_categorization_main(papers, config):
     related_arxiv_numbers = [arxiv for arxiv, title in papers if title in related_titles]
     related_papers = {arxiv: title for arxiv, title in papers if title in related_titles}
 
-    # Write related papers to a JSON file to be used by the next script
+    # Overwrite related papers to a JSON file to be used by the next script
+    if os.path.exists(related_papers_json):
+        os.remove(related_papers_json)
     with open(related_papers_json, 'w') as file:
         #json.dump(related_arxiv_numbers, file)
         json.dump(related_papers, file)
