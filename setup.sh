@@ -1,7 +1,15 @@
 #!/bin/bash
 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
 # This is optional directory where the final tex file will be located. You can change the location of the final file in the run.sh script
-mkdir output 
+read -p "Do you want to save the outputs (compiled tex files) in the output folder? (y/n): " create_output_dir
+if [[ "$create_output_dir" == "y" ]]; then
+    mkdir output 
+		echo "The output will be saved in ${SCRIPT_DIR}/output/"
+else
+		echo "You will have to manually change the folder where the output tex file is saved in run.sh"
+fi
 
 # Create python environment
 if [ -d "$ENV_FOLDER" ]; then
