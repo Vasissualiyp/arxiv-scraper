@@ -2,6 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import os
+import csv
+from datetime import datetime
 from configuration import Config
 
 def fetch_arxiv_abstract(arxiv_number):
@@ -46,6 +48,20 @@ def create_final_latex_document(template_file, papers_file, output_file):
         print(f"FileNotFoundError: {e}")
     except Exception as e:
         print(f"An error occurred: {e}")
+
+def write_tuples_to_csv(papers, config):
+    # Get today's date in the desired format
+    filename = config.ArchiveFile 
+    today_date = datetime.today().strftime('%Y-%m-%d')
+
+    # Open the CSV file in append mode
+    with open(filename, 'a', newline='') as csvfile:
+        csv_writer = csv.writer(csvfile)
+
+        # Iterate over the list of tuples
+        for paper in papers:
+            # Append the current date and the tuple elements to the CSV file
+            csv_writer.writerow([today_date] + list(paper))
 
 def create_tex_main(config):
     # Load the related papers from the JSON file

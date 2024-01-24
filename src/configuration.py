@@ -39,5 +39,6 @@ def extract_configuration(config_file):
     config.RelatedPapersJson  = os.path.join('workdir', config.RelatedPapersJson )
     config.RelatedPapersContent  = os.path.join('workdir', config.RelatedPapersContent )
     config.OutputTexFile = os.path.join('workdir', config.OutputTexFile)
+    config.ArchiveFile = os.path.join('workdir', config.ArchiveFile)
 
     return config

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#OUTPUT_FOLDER="$HOME/research/notes/arxiv_scraper/"
-OUTPUT_FOLDER="./output/"
+OUTPUT_FOLDER="$HOME/research/notes/papers/arxiv_scraper/"
+#OUTPUT_FOLDER="./output/"
 
 # Get the directory where the script is located 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
