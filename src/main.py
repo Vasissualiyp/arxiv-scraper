@@ -2,7 +2,7 @@ from categorize_papers import ai_categorization_main
 from configuration import extract_configuration
 from fetch_abstracts import create_tex_main
 from fetch_abstracts import write_tuples_to_csv
-irom scrape_pages import scrape_arxiv_new_submissions
+from scrape_pages import scrape_arxiv_new_submissions
 from scrape_pages import scrape_arxiv_abstract
 
 # Extract config
