@@ -7,6 +7,7 @@ import sys
 from configuration import Config
 from scrape_pages import scrape_arxiv_new_submissions
 from scrape_pages import scrape_arxiv_abstract
+from fetch_abstracts import write_tuples_to_csv
 
 # Initialize the OpenAI API client
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -45,6 +46,11 @@ def categorize_papers(paper_titles, topics_file, model_engine):
             is_related = response.choices[0].message.content.strip().lower()
             if is_related == 'yes':
                 related_papers.append(title)
+            elif is_related == 'no':
+                print(f'Paper {title} was found irrelevant')
+            else:
+                print(f'Paper {title} failed categorization. AI response:')
+                print(is_related)
         except KeyError as e:
             print(f"KeyError: {e}")
             print("Could not find the required key in the response.")
@@ -101,6 +107,13 @@ def ai_categorization_main(papers, config):
     # Get the arXiv numbers of the related papers
     related_arxiv_numbers = [arxiv for arxiv, title in papers if title in related_titles]
     related_papers = {arxiv: title for arxiv, title in papers if title in related_titles}
+
+    # Convert the dictionary to a list of tuples
+    papers_list = list(related_papers.items())
+    # Filter the list based on related_arxiv_numbers
+    filtered_papers = [(arxiv, title) for arxiv, title in papers_list if arxiv in related_arxiv_numbers]
+    write_tuples_to_csv(filtered_papers, config)
+
 
     # Overwrite related papers to a JSON file to be used by the next script
     if os.path.exists(related_papers_json):
