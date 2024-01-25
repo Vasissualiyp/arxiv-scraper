@@ -1,7 +1,7 @@
 #!/bin/bash
 
-OUTPUT_FOLDER="$HOME/research/notes/papers/arxiv_scraper/"
-#OUTPUT_FOLDER="./output/"
+#OUTPUT_FOLDER="$HOME/research/notes/papers/arxiv_scraper/"
+OUTPUT_FOLDER="./output/"
 
 # Get the directory where the script is located 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
@@ -12,4 +12,16 @@ cd "$SCRIPT_DIR"
 source ./env/bin/activate
 python ./src/main.py
 
-#mv ./workdir/related_papers.tex "$OUTPUT_FOLDER"
+mv ./workdir/related_papers.tex "$OUTPUT_FOLDER"
+
+# Compile the document
+cd "$OUTPUT_FOLDER"
+pdflatex "related_papers.tex"
+# Cleanup the folder - only leave .tex and .pdf files
+for file in *; do
+    if [[ ! $file =~ \.tex$ ]] && [[ ! $file =~ \.pdf$ ]]; then
+        rm "$file"
+    fi
+done
+
+
