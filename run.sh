@@ -15,7 +15,7 @@ python ./src/main.py
 mv ./workdir/related_papers.tex "$OUTPUT_FOLDER"
 
 # Compile the document
-cd "$OUTPUT_FOLDER"
+cd "$OUTPUT_FOLDER" || exit 1
 pdflatex "related_papers.tex"
 # Cleanup the folder - only leave .tex and .pdf files
 for file in *; do
