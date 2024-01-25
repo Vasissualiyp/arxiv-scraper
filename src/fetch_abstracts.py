@@ -53,6 +53,13 @@ def write_tuples_to_csv(papers, config):
     # Get today's date in the desired format
     filename = config.ArchiveFile 
     today_date = datetime.today().strftime('%Y-%m-%d')
+    
+    # Check if the file exists
+    if not os.path.exists(filename):
+        # Open the file in write mode to create it and write the header
+        with open(filename, 'w', newline='') as csvfile:
+            csv_writer = csv.writer(csvfile)
+            csv_writer.writerow(['Date', 'Arxiv Number', 'Title'])
 
     # Open the CSV file in append mode
     with open(filename, 'a', newline='') as csvfile:
