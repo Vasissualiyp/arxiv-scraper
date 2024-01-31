@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import os
+import re
 import csv
 from datetime import datetime
 from configuration import Config
@@ -16,6 +17,44 @@ def fetch_arxiv_abstract(arxiv_number):
     if abstract_block:
         return abstract_block.text.replace('Abstract:', '').strip()
     return None
+
+def fetch_arxiv_authors(arxiv_number):
+    authors_url = f'https://arxiv.org/abs/{arxiv_number}'
+    response = requests.get(authors_url)
+    if response.status_code != 200:
+        return None
+
+    soup = BeautifulSoup(response.content, 'html.parser')
+    # Depending on the exact structure of the page, the class name might change
+    authors_block = soup.find('div', class_='authors')
+
+    if not authors_block:
+        return None
+
+    # Extracting just the text, stripping and splitting by newline to handle multiple authors
+    authors_list = [author.get_text().strip() for author in authors_block.find_all('a')]
+    
+    if len(authors_list) > 4:
+        return f"{authors_list[0]} et al."
+    else:
+        return ', '.join(authors_list)
+
+def correct_math_format(abstract):
+    # Escape % signs not already escaped
+    abstract = re.sub(r'(?<!\\)%', r'\%', abstract)
+    
+    # Find all instances of math expressions with ^ or _
+    # that are not already inside $...$ and enclose them in $...$
+    # This regex looks for patterns outside $ signs
+    patterns = [
+        (r'(?<!\$)([\^_][^\s]+)(?!\$)', r'$\1$'),  # Enclose ^ or _ followed by non-space characters
+        (r'(?<!\$)([\^_]\{[^\}]+\})(?!\$)', r'$\1$')  # Enclose ^ or _ followed by {..}
+    ]
+
+    for pattern, replacement in patterns:
+        abstract = re.sub(pattern, replacement, abstract)
+
+    return abstract
 
 def create_final_latex_document(template_file, papers_file, output_file):
     """
@@ -83,16 +122,19 @@ def create_tex_main(config):
     papers_info = []
     for arxiv_number, title in related_papers.items():
         abstract = fetch_arxiv_abstract(arxiv_number)
+        abstract = correct_math_format(abstract) # This is needed to treat symbols like $, ^, _ as math expressions if they aren't already
+        authors = fetch_arxiv_authors(arxiv_number)
         if abstract:
-            papers_info.append((title, arxiv_number, abstract))
+            papers_info.append((title, arxiv_number, authors, abstract))
 
     # Write to a LaTeX file
     with open(related_papers_content, 'w') as tex_file:
         for title, arxiv_number, abstract in papers_info:
             title_line = f"\\section{{{title}}}\n"
-            link_line = f"\\url{{https://arxiv.org/pdf/{arxiv_number}.pdf}}{{arXiv:{arxiv_number}}}\n\n"
+            link_line = f"\\url{{https://arxiv.org/pdf/{arxiv_number}.pdf}}\n\n{{arXiv:{arxiv_number}}}\n\n"
+            authors_line = f"\\textbf{{{authors}}}\n"
             abstract_line = f"{abstract}\n\n"
-            tex_file.write(title_line + link_line + abstract_line)
+            tex_file.write(title_line + link_line + authors_line + abstract_line)
 
     # Example usage:
     create_final_latex_document(template_tex, related_papers_content, related_papers_tex)
