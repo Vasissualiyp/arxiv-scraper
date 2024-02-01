@@ -109,12 +109,35 @@ def write_tuples_to_csv(papers, config):
             # Append the current date and the tuple elements to the CSV file
             csv_writer.writerow([today_date] + list(paper))
 
+def combine_into_into_latex_string(related_papers_content, papers_info):
+    with open(related_papers_content, 'w') as tex_file:
+        for title, arxiv_number, authors, abstract in papers_info:
+            title_line = f"\\section{{{title}}}\n"
+            link_line = f"\\url{{https://arxiv.org/pdf/{arxiv_number}.pdf}}\n\n{{arXiv:{arxiv_number}}}\n\n"
+            authors_line = f"\\textbf{{{authors}}}\n"
+            abstract_line = f"{abstract}\n\n"
+            tex_file.write(title_line + link_line + authors_line + abstract_line)
+
+def combine_into_into_speech_string(speech_tex_file, papers_info):
+    with open(speech_tex_file, 'w') as tex_file:
+        total_papers = len(papers_info)
+        for index(title, arxiv_number, authors, abstract) in enumerate(papers_info):
+            # Include the number of the paper
+            number_of_entry = f"Paper Number {index} out of {total_papers}\n"
+
+            # Create a tex file entry with all necessary info
+            title_line = f"Title: {title}\n"
+            authors_line = f"Authors: {authors}\n"
+            abstract_line = f"Abstract: {abstract}\n\n"
+            tex_file.write(number_of_entry + title_line + authors_line + abstract_line)
+
 def create_tex_main(config):
     # Load the related papers from the JSON file
     template_tex = config.TemplateTex 
     related_papers_json = config.RelatedPapersJson 
     related_papers_tex = config.OutputTexFile 
     related_papers_content = config.RelatedPapersContent 
+    speech_tex_file = config.SpeechTexFile
     with open(related_papers_json, 'r') as file:
         related_papers = json.load(file)
 
@@ -128,13 +151,10 @@ def create_tex_main(config):
             papers_info.append((title, arxiv_number, authors, abstract))
 
     # Write to a LaTeX file
-    with open(related_papers_content, 'w') as tex_file:
-        for title, arxiv_number, abstract in papers_info:
-            title_line = f"\\section{{{title}}}\n"
-            link_line = f"\\url{{https://arxiv.org/pdf/{arxiv_number}.pdf}}\n\n{{arXiv:{arxiv_number}}}\n\n"
-            authors_line = f"\\textbf{{{authors}}}\n"
-            abstract_line = f"{abstract}\n\n"
-            tex_file.write(title_line + link_line + authors_line + abstract_line)
+    combine_into_into_latex_string(related_papers_content, papers_info)
+
+    # Write to a LaTeX file for speech generation
+    combine_into_into_speech_string(speech_tex_file, papers_info)
 
     # Example usage:
     create_final_latex_document(template_tex, related_papers_content, related_papers_tex)

@@ -4,6 +4,7 @@ from fetch_abstracts import create_tex_main
 from fetch_abstracts import write_tuples_to_csv
 from scrape_pages import scrape_arxiv_new_submissions
 from scrape_pages import scrape_arxiv_abstract
+from doc_to_speech import tts_main
 
 # Extract config
 config = extract_configuration('config/config.ini')
@@ -19,3 +20,6 @@ ai_categorization_main(papers, config)
 
 # Create a tex file with all relevant papers
 create_tex_main(config)
+
+# Create text-to-speech summary of the papers
+tts_main(config)
