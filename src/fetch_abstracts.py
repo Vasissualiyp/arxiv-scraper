@@ -114,14 +114,14 @@ def combine_into_into_latex_string(related_papers_content, papers_info):
         for title, arxiv_number, authors, abstract in papers_info:
             title_line = f"\\section{{{title}}}\n"
             link_line = f"\\url{{https://arxiv.org/pdf/{arxiv_number}.pdf}}\n\n{{arXiv:{arxiv_number}}}\n\n"
-            authors_line = f"\\textbf{{{authors}}}\n"
+            authors_line = f"\\textbf{{{authors}}}\n\n"
             abstract_line = f"{abstract}\n\n"
             tex_file.write(title_line + link_line + authors_line + abstract_line)
 
 def combine_into_into_speech_string(speech_tex_file, papers_info):
     with open(speech_tex_file, 'w') as tex_file:
         total_papers = len(papers_info)
-        for index(title, arxiv_number, authors, abstract) in enumerate(papers_info):
+        for index, (title, arxiv_number, authors, abstract) in enumerate(papers_info, start=1):
             # Include the number of the paper
             number_of_entry = f"Paper Number {index} out of {total_papers}\n"
 

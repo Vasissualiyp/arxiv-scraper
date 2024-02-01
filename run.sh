@@ -13,7 +13,7 @@ source ./env/bin/activate
 python ./src/main.py
 
 mv ./workdir/related_papers.tex "$OUTPUT_FOLDER"
-mv ./workdir/tts_papers.mp3"$OUTPUT_FOLDER"
+mv ./workdir/tts_papers.mp3 "$OUTPUT_FOLDER"
 
 # Compile the document
 cd "$OUTPUT_FOLDER" || exit 1
