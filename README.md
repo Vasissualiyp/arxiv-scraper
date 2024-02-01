@@ -1,6 +1,6 @@
 # ArXiv Abstract Scraper and Compiler
 
-This script automates the process of scraping the newest arXiv papers' abstracts based on topics relevant to your chosen field. The relevance of papers is determined using the ChatGPT API. It then compiles these abstracts into a single LaTeX document, streamlining access to information pertinent to your research area.
+This script automates the process of scraping the newest arXiv papers' abstracts based on topics relevant to your chosen field. The relevance of papers is determined using the ChatGPT API. It then compiles these abstracts into a single LaTeX document, streamlining access to information pertinent to your research area. This script also has the ability to generate a voice reading of the papers, using text-to-speech python library.
 
 ## Installation
 
