@@ -119,8 +119,12 @@ def combine_into_into_latex_string(related_papers_content, papers_info):
             tex_file.write(title_line + link_line + authors_line + abstract_line)
 
 def combine_into_into_speech_string(speech_tex_file, papers_info):
+    begin_string = f"\\begin{{document}}\n\n"
+    end_string = f"\\end{{document}}\n\n"
+
     with open(speech_tex_file, 'w') as tex_file:
         total_papers = len(papers_info)
+        tex_file.write(begin_string)
         for index, (title, arxiv_number, authors, abstract) in enumerate(papers_info, start=1):
             # Include the number of the paper
             number_of_entry = f"Paper Number {index} out of {total_papers}\n"
@@ -130,6 +134,7 @@ def combine_into_into_speech_string(speech_tex_file, papers_info):
             authors_line = f"Authors: {authors}\n"
             abstract_line = f"Abstract: {abstract}\n\n"
             tex_file.write(number_of_entry + title_line + authors_line + abstract_line)
+        tex_file.write(end_string)
 
 def create_tex_main(config):
     # Load the related papers from the JSON file

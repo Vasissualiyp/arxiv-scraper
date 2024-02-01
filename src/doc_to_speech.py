@@ -28,6 +28,7 @@ def extract_document_content(latex_file_path):
     with open(latex_file_path, 'r') as file:
         content = file.read()
     
+    print(latex_file_path)
     # Regular expression to find content between \begin{document} and \end{document}
     match = re.search(r'\\begin{document}(.*?)\\end{document}', content, re.DOTALL)
 
@@ -41,5 +42,7 @@ def tts_main(config):
     output_speech_file = config.OutputSpeechFile 
 
     latex_content = extract_document_content(speech_tex_file)
+    print(speech_tex_file)
+    print(latex_content)
     text_to_speech(latex_content, output_speech_file)
 
