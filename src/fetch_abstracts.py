@@ -40,6 +40,7 @@ def fetch_arxiv_authors(arxiv_number):
         return ', '.join(authors_list)
 
 def correct_math_format(abstract):
+    """
     # Escape % signs not already escaped
     abstract = re.sub(r'(?<!\\)%', r'\%', abstract)
     
@@ -53,7 +54,8 @@ def correct_math_format(abstract):
 
     for pattern, replacement in patterns:
         abstract = re.sub(pattern, replacement, abstract)
-
+    """
+    # For now, haven't created a function that will correct the math as needed - the function above will only make everything worse
     return abstract
 
 def create_final_latex_document(template_file, papers_file, output_file):
