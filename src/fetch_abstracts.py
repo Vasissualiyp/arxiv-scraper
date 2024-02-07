@@ -40,10 +40,10 @@ def fetch_arxiv_authors(arxiv_number):
         return ', '.join(authors_list)
 
 def correct_math_format(abstract):
-    """
     # Escape % signs not already escaped
     abstract = re.sub(r'(?<!\\)%', r'\%', abstract)
     
+    """
     # Find all instances of math expressions with ^ or _
     # that are not already inside $...$ and enclose them in $...$
     # This regex looks for patterns outside $ signs
@@ -56,6 +56,7 @@ def correct_math_format(abstract):
         abstract = re.sub(pattern, replacement, abstract)
     """
     # For now, haven't created a function that will correct the math as needed - the function above will only make everything worse
+    # So currently only take care of usage of % sign that forces to comment the latex line, if used without \
     return abstract
 
 def create_final_latex_document(template_file, papers_file, output_file):
