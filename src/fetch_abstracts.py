@@ -121,6 +121,16 @@ def combine_into_into_latex_string(related_papers_content, papers_info):
             abstract_line = f"{abstract}\n\n"
             tex_file.write(title_line + link_line + authors_line + abstract_line)
 
+def create_speech_string_for_single_paper(tex_file, index, total_papers, title, arxiv_number, authors, abstract):
+    # Include the number of the paper
+    number_of_entry = f"Paper Number {index} out of {total_papers}\n"
+
+    # Create a tex file entry with all necessary info
+    title_line = f"Title: {title}\n"
+    authors_line = f"Authors: {authors}\n"
+    abstract_line = f"Abstract: {abstract}\n\n"
+    tex_file.write(number_of_entry + title_line + authors_line + abstract_line)
+
 def combine_into_into_speech_string(speech_tex_file, papers_info):
     begin_string = f"\\begin{{document}}\n\n"
     end_string = f"\\end{{document}}\n\n"
@@ -129,15 +139,40 @@ def combine_into_into_speech_string(speech_tex_file, papers_info):
         total_papers = len(papers_info)
         tex_file.write(begin_string)
         for index, (title, arxiv_number, authors, abstract) in enumerate(papers_info, start=1):
-            # Include the number of the paper
-            number_of_entry = f"Paper Number {index} out of {total_papers}\n"
-
-            # Create a tex file entry with all necessary info
-            title_line = f"Title: {title}\n"
-            authors_line = f"Authors: {authors}\n"
-            abstract_line = f"Abstract: {abstract}\n\n"
-            tex_file.write(number_of_entry + title_line + authors_line + abstract_line)
+            create_speech_string_for_single_paper(tex_file, index, total_papers, title, arxiv_number, authors, abstract)
         tex_file.write(end_string)
+
+def create_separate_tex_files_for_each_paper(separate_papers_folder, papers_info):
+    begin_string, end_string = latex_begin_end_strings()
+    total_papers = len(papers_info)
+    for index, (title, arxiv_number, authors, abstract) in enumerate(papers_info, start=1):
+        tex_file_name = str(index) + '_speech.tex'
+        speech_tex_file = os.path.join(separate_papers_folder, tex_file_name)
+        with open(speech_tex_file, 'w') as tex_file:
+            tex_file.write(begin_string)
+            create_speech_string_for_single_paper(tex_file, index, total_papers, title, arxiv_number, authors, abstract)
+            tex_file.write(end_string)
+
+def latex_begin_end_strings():
+    begin_string = r"""
+\documentclass{article}
+
+\usepackage[utf8]{inputenc} % Allows input to be in utf8
+\usepackage{amsmath}        % For mathematical symbols
+\usepackage{amsfonts}       % For mathematical fonts
+\usepackage{amssymb}        % For mathematical symbols
+\usepackage{geometry}       % For setting margins
+
+% Set the page margins to 1 inch all around:
+\geometry{letterpaper, portrait, margin=1in}
+
+\begin{document}
+    """
+
+    end_string = r"""
+\end{document}
+    """
+    return begin_string, end_string
 
 def create_tex_main(config):
     # Load the related papers from the JSON file
@@ -146,6 +181,8 @@ def create_tex_main(config):
     related_papers_tex = config.OutputTexFile 
     related_papers_content = config.RelatedPapersContent 
     speech_tex_file = config.SpeechTexFile
+    separate_papers_folder = config.SeparatePapersFolder
+
     with open(related_papers_json, 'r') as file:
         related_papers = json.load(file)
 

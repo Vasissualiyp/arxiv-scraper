@@ -42,5 +42,6 @@ def extract_configuration(config_file):
     config.ArchiveFile = os.path.join('workdir', config.ArchiveFile)
     config.SpeechTexFile = os.path.join('workdir', config.SpeechTexFile)
     config.OutputSpeechFile = os.path.join('workdir', config.OutputSpeechFile)
+    config.SeparatePapersFolder = os.path.join('workdir', config.SeparatePapersFolder)
 
     return config
