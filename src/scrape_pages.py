@@ -24,7 +24,6 @@ def scrape_arxiv_new_submissions(url):
 
     return papers
 
-
 def scrape_arxiv_abstract(arxiv_number):
     """
     Given an arXiv number, this function scrapes the corresponding paper's abstract from arXiv.org.

@@ -22,7 +22,7 @@ def main():
     
     # Scrape arxiv for recent papers
     papers = scrape_arxiv_new_submissions(config.ArxivURL)
-    archived_list_filename = 'workdir/archive.csv'
+    #archived_list_filename = 'workdir/archive.csv'
     #write_tuples_to_csv(papers, config)
     
     # Categorize recent papers with ChatGPT
