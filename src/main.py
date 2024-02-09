@@ -1,4 +1,5 @@
 from categorize_papers import ai_categorization_main
+from categorize_papers import dump_papers_to_json
 from configuration import extract_configuration
 from fetch_abstracts import create_tex_main
 from fetch_abstracts import write_tuples_to_csv
@@ -13,8 +14,13 @@ def csv_main():
 
     date = "2024-02-06"
 
-    arxiv_numbers = get_arxiv_numbers_for_date(config, date)
-    print(arxiv_numbers)
+    related_papers = get_arxiv_numbers_for_date(config, date)
+
+    # Now, put the papers to the json file, which will be later used to create the tex file
+    dump_papers_to_json(related_papers, config)
+    
+    # Create a tex file with all relevant papers
+    create_tex_main(config)
 
 def main():
     # Extract config
@@ -26,8 +32,11 @@ def main():
     #write_tuples_to_csv(papers, config)
     
     # Categorize recent papers with ChatGPT
-    ai_categorization_main(papers, config)
+    related_papers = ai_categorization_main(papers, config)
     # The function above will also add the discovered arxiv pages to the csv file
+
+    # Now, put the papers to the json file, which will be later used to create the tex file
+    dump_papers_to_json(related_papers, config)
     
     # Create a tex file with all relevant papers
     create_tex_main(config)

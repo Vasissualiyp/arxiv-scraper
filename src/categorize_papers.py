@@ -91,7 +91,6 @@ def ai_categorization_main(papers, config):
     # Extract config
     topics_file = config.TopicsFile
     last_paper_file = config.LastPaperFile
-    related_papers_json = config.RelatedPapersJson
     model_engine = config.ChatGPTModel
 
     last_paper_id = get_last_paper_id(papers, last_paper_file)
@@ -114,7 +113,10 @@ def ai_categorization_main(papers, config):
     filtered_papers = [(arxiv, title) for arxiv, title in papers_list if arxiv in related_arxiv_numbers]
     write_tuples_to_csv(filtered_papers, config)
 
+    return related_papers
 
+def dump_papers_to_json(related_papers, config):
+    related_papers_json = config.RelatedPapersJson
     # Overwrite related papers to a JSON file to be used by the next script
     if os.path.exists(related_papers_json):
         os.remove(related_papers_json)
