@@ -45,6 +45,6 @@ def main():
     tts_main(config)
 
 if __name__ == '__main__':
-    #main()
-    csv_main()
+    main()
+    #csv_main()
 

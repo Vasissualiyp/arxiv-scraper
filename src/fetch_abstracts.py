@@ -169,14 +169,14 @@ def create_tex_main(config):
 
 def get_arxiv_numbers_for_date(config, date):
     csv_location = config.ArchiveFile
-    arxiv_details = []  # Renamed for clarity
+    arxiv_details_dict = {}  # Use a dictionary instead of a list
     with open(csv_location, mode='r', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         for row in reader:
             if row['Date'] == date:
-                # Append a tuple of (Arxiv Number, Title)
-                arxiv_details.append((row['Arxiv Number'], row['Title']))
-    return arxiv_details
+                # Directly insert into the dictionary
+                arxiv_details_dict[row['Arxiv Number']] = row['Title']
+    return arxiv_details_dict
 
 
 if __name__ == "__main__":
