@@ -167,6 +167,15 @@ def create_tex_main(config):
     # Example usage:
     create_final_latex_document(template_tex, related_papers_content, related_papers_tex)
 
+def get_arxiv_numbers_for_date(config, date):
+    csv_location = config.ArchiveFile
+    arxiv_numbers = []
+    with open(csv_location, mode='r', encoding='utf-8') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            if row['Date'] == date:
+                arxiv_numbers.append(row['Arxiv Number'])
+    return arxiv_numbers
 
 if __name__ == "__main__":
     create_tex_main()
