@@ -1,4 +1,5 @@
 #!/bin/bash
+# TODO: CREATE separate_folders_file 
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 

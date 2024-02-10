@@ -85,7 +85,7 @@ def latex_begin_end_strings():
     """
     return begin_string, end_string
 
-def combine_into_into_latex_string(related_papers_content, papers_info):
+def combine_into_latex_string(related_papers_content, papers_info):
     with open(related_papers_content, 'w') as tex_file:
         for title, arxiv_number, authors, abstract in papers_info:
             title_line = f"\\section{{{title}}}\n"
@@ -149,10 +149,10 @@ def create_tex_main(config):
             papers_info.append((title, arxiv_number, authors, abstract))
 
     # Write to a LaTeX file
-    combine_into_into_latex_string(related_papers_content, papers_info)
+    combine_into_latex_string(related_papers_content, papers_info)
 
     # Write to a LaTeX file for speech generation
-    combine_into_into_speech_string(speech_tex_file, papers_info)
+    combine_into_speech_string(speech_tex_file, papers_info)
 
     # Example usage:
     create_final_latex_document(template_tex, related_papers_content, related_papers_tex)
@@ -188,7 +188,7 @@ def create_tex_string_for_single_paper(tex_file, index, total_papers, title, arx
     abstract_line = f"Abstract: {abstract}\n"
     tex_file.write(number_of_entry + title_line + arxiv_line +  authors_line + abstract_line)
 
-def combine_into_into_speech_string(speech_tex_file, papers_info):
+def combine_into_speech_string(speech_tex_file, papers_info):
     begin_string = f"\\begin{{document}}\n\n"
     end_string = f"\\end{{document}}\n\n"
 
@@ -221,8 +221,39 @@ def create_separate_tex_files_for_each_paper(separate_papers_folder, papers_info
             create_tex_string_for_single_paper(tex_file, index, total_papers, title, arxiv_number, authors, abstract)
             tex_file.write(end_string)
 
+def create_all_speech_files_main(config):
+    # Load the related papers from the JSON file
+    template_tex = config.TemplateTex 
+    related_papers_json = config.RelatedPapersJson 
+    related_papers_tex = config.OutputTexFile 
+    related_papers_content = config.RelatedPapersContent 
+    speech_tex_file = config.SpeechTexFile
+    separate_papers_folder = config.SeparatePapersFolder
+
+    with open(related_papers_json, 'r') as file:
+        related_papers = json.load(file)
+
+    # Fetch the abstracts
+    papers_info = []
+    for arxiv_number, title in related_papers.items():
+        abstract = fetch_arxiv_abstract(arxiv_number)
+        abstract = correct_math_format(abstract) # This is needed to treat symbols like $, ^, _ as math expressions if they aren't already
+        authors = fetch_arxiv_authors(arxiv_number)
+        if abstract:
+            papers_info.append((title, arxiv_number, authors, abstract))
+
+    # Write to a speech and read LaTeX files
+    create_separate_tex_files_for_each_paper(separate_papers_folder, papers_info)
+
+    # Write to a LaTeX file for speech generation
+    #combine_into_speech_string(speech_tex_file, papers_info)
+
+    # Example usage:
+    #create_final_latex_document(template_tex, related_papers_content, related_papers_tex)
+
 # Functions for working outside of latex framework
 def get_arxiv_numbers_for_date(config, date):
+
     csv_location = config.ArchiveFile
     arxiv_details_dict = {}  # Use a dictionary instead of a list
     with open(csv_location, mode='r', encoding='utf-8') as file:
