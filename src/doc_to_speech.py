@@ -46,3 +46,28 @@ def tts_main(config):
     print(latex_content)
     text_to_speech(latex_content, output_speech_file)
 
+def tts_with_video_main(config):
+    separate_papers_folder = config.SeparatePapersFolder
+
+    # List all files in the separate_papers_folder
+    for filename in os.listdir(separate_papers_folder):
+        # Filter files that end with '_speech.tex'
+        if filename.endswith('_speech.tex'):
+            speech_tex_file = os.path.join(separate_papers_folder, filename)
+            
+            # Construct the output speech file name
+            base_name = filename.replace('_speech.tex', '')
+            output_speech_file = os.path.join(separate_papers_folder, f"{base_name}.mp3")
+            
+            # Extract LaTeX content from the file
+            latex_content = extract_document_content(speech_tex_file)
+            
+            # Logging for debugging
+            print(f"Processing: {speech_tex_file}")
+            print(f"Latex Content: {latex_content[:100]}...")  # Print first 100 characters for preview
+            
+            # Convert LaTeX content to speech
+            text_to_speech(latex_content, output_speech_file)
+            
+            print(f"Generated speech file: {output_speech_file}")
+
