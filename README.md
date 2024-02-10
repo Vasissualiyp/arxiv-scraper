@@ -7,6 +7,7 @@ This script automates the process of scraping the newest arXiv papers' abstracts
 ### Prerequisites
 - Python installed with pip
 - An OpenAI API key for accessing the ChatGPT API
+- bash utilities: pdflatex, poppler-utils
 
 ### Setup
 1. Obtain an OpenAI API key following instructions [here](https://www.howtogeek.com/885918/how-to-get-an-openai-api-key/).
