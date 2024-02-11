@@ -14,7 +14,37 @@ from create_movie import combine_videos
 
 def main(date = "current", combined_file_flag = False):
     """
-    The main 
+    Main function to fetch, categorize, and process arXiv papers.
+
+    This function performs a series of operations to scrape new submissions from arXiv,
+    categorize them using AI, and optionally combine them into a single TeX document and/or
+    generate text-to-speech summaries. The behavior of the function changes based on the
+    input parameters.
+
+    Parameters:
+    - date (str): Specifies the date for which to fetch arXiv papers. If 'current', the function
+      scrapes new submissions from arXiv. For any other date, it retrieves papers published on that
+      specific date. The date format should match the expected format by `get_arxiv_numbers_for_date`.
+    - combined_file_flag (bool): If True, the function creates a combined TeX file for all relevant
+      papers and a single text-to-speech summary. If False, it generates individual speech and TeX files
+      for each paper.
+
+    Operations:
+    1. Extracts configuration settings from a specified INI file.
+    2. Based on the 'date' parameter, either scrapes new submissions from arXiv or fetches papers
+       for a specific date.
+    3. Categorizes papers using AI (assumed to filter relevant papers based on some criteria).
+    4. Dumps the metadata of relevant papers into a JSON file for later processing.
+    5. Depending on the 'combined_file_flag', either creates a combined TeX document and a single
+       text-to-speech summary or generates individual files for each categorized paper.
+
+    Side Effects:
+    - Writes to files (CSV, JSON, TeX) in predefined directories.
+    - Potentially makes network requests to arXiv and any used text-to-speech service.
+    - Prints the response or outcome of various operations to stdout.
+
+    Returns:
+    None
     """
     # Extract config
     config = extract_configuration('config/config.ini')
