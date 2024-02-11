@@ -36,31 +36,36 @@ cd "$DIRECTORY"
 #
 #echo "Conversion pdf -> png completed."
 #
-## Now, create mp4 files
-#
-## Iterate over all .mp3 files in the current directory
-#for audio_file in *.mp3; do
-#    # Extract the base name without the file extension
-#    base_name="${audio_file%.*}"
-#    
-#    # Define the corresponding image file name
-#    image_file="${base_name}_read-1.png"
-#    
-#    # Define the output video file name
-#    output_file="${base_name}.mp4"
-#    
-#    # Check if the image file exists
-#    if [ -f "$image_file" ]; then
-#        echo "Processing: $base_name"
-#        
-#        # Use ffmpeg to create video file from the image and audio files
-#        ffmpeg -loop 1 -framerate 1 -i "$image_file" -i "$audio_file" -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest "$output_file"
-#        
-#        echo "Created video: $output_file"
-#    else
-#        echo "Image file not found for $audio_file"
-#    fi
-#done
+# Now, create mp4 files
+
+# Iterate over all .mp3 files in the current directory
+for audio_file in *.mp3; do
+    # Extract the base name without the file extension
+    base_name="${audio_file%.*}"
+
+    # Define the corresponding image file name
+    image_file="${base_name}_read-1.png"
+
+    # Define the output video file name
+    output_file="${base_name}.mp4"
+
+    # Check if the image file exists
+    if [ -f "$image_file" ]; then
+        echo "Processing: $base_name"
+
+        # Get the duration of the audio file in seconds
+        audio_duration=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$audio_file")
+        # Add a few extra seconds to the audio duration
+        extended_duration=$(echo "$audio_duration + 5" | bc)
+
+        # Use ffmpeg to create video file from the image and audio files
+        ffmpeg -loop 1 -framerate 1 -i "$image_file" -i "$audio_file" -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -t "$extended_duration" -shortest "$output_file"
+
+        echo "Created video: $output_file"
+    else
+        echo "Image file not found for $audio_file"
+    fi
+done
 
 # Create a temporary file list for ffmpeg
 file_list=$(mktemp /tmp/ffmpeg_list.XXXXXX.txt)

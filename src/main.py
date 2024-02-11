@@ -24,14 +24,14 @@ def create_movie_main():
     #dump_papers_to_json(related_papers, config)
     
     # Create a tex files with all relevant papers
-    #create_all_speech_files_main(config)
+    create_all_speech_files_main(config)
     
     # Create speech and tex files
-    #tts_with_video_main(config)
+    tts_with_video_main(config)
     
     # Create separate video files
-    create_video_files(config)
-    combine_videos(config)
+    #create_video_files(config)
+    #combine_videos(config)
     
 
 def main():
