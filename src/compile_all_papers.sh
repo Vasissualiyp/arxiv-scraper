@@ -78,13 +78,10 @@ for f in $(ls *.mp4 | sort -V); do
     echo "file '$PWD/$f'" >> "$file_list"
 done
 
-# Define the output file name
-output_file="combined_video.mp4"
-
 # Use ffmpeg to concatenate all videos using the generated file list
-ffmpeg -f concat -safe 0 -i "$file_list" -c copy "$output_file"
+ffmpeg -f concat -safe 0 -i "$file_list" -c copy "$OUTPUT_VIDEO_FILE"
 
 # Remove the temporary file list
 rm "$file_list"
 
-echo "All videos have been combined into $output_file"
+echo "All videos have been combined into $OUTPUT_VIDEO_FILE"

@@ -29,6 +29,8 @@ python ./src/main.py
 # This script will create the video for YouTube
 ./src/compile_all_papers.sh "$SEPARATE_PAPERS_FOLDER" "$OUTPUT_VIDEO_FILE"
 
+cd "$SCRIPT_DIR"
+
 # Move the files to the output folder
 cp "./workdir/$OUTPUT_TEX_FILE" "$OUTPUT_FOLDER"
 cp "./workdir/$OUTPUT_SPEECH_FILE" "$OUTPUT_FOLDER"
@@ -36,7 +38,7 @@ cp "./workdir/$SEPARATE_PAPERS_FOLDER/$OUTPUT_VIDEO_FILE" "$OUTPUT_FOLDER"
 
 # Compile the document
 cd "$OUTPUT_FOLDER" || { echo "Output folder doesn't exist! Exiting..."; exit 1; }
-pdflatex -interaction=nonstopmode "$OUTPUT_TEX_FILE"
+#pdflatex -interaction=nonstopmode "$OUTPUT_TEX_FILE"
 
 # Cleanup the folder - only leave .tex, .pdf, and .mp3 files
 for file in *; do
