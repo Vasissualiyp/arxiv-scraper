@@ -1,42 +1,45 @@
 #!/bin/bash
 
-# Directory containing your .tex files
-DIRECTORY="./workdir/separate_papers/"
+# Obtain the arguments
+SEPARATE_PAPERS_FOLDER="$1"
+OUTPUT_VIDEO_FILE="$2"
 
-# Change to the directory
-cd "$DIRECTORY"
-#
-## Convert .tex to .pdf for all files in directory
-#
-## Iterate over all *_read.tex files in the directory
-#for texfile in *_read.tex; do
-#    echo "Compiling $texfile..."
-#    pdflatex -interaction=nonstopmode "$texfile" > /dev/null
-#
-#    # Check if pdflatex succeeded
-#    if [ $? -eq 0 ]; then
-#        echo "$texfile compiled successfully."
-#    else
-#        echo "Failed to compile $texfile."
-#    fi
-#done
-#
-#echo "All files compiled."
-#
-## Iterate over all PDF files in the directory
-#for pdffile in *.pdf; do
-#    # Extract base name without the extension
-#    base_name="${pdffile%.pdf}"
-#
-#    echo "Converting $pdffile to PNG..."
-#    pdftoppm -png -r 300 "$pdffile" "${base_name}"
-#done
-#
-## Convert .pdf to .png for all files in directory
-#
-#echo "Conversion pdf -> png completed."
-#
+# Change to the directory to the one with all the .tex and .mp3 files
+cd "./workdir/$SEPARATE_PAPERS_FOLDER"
+
+# Convert .tex to .pdf for all files in directory
+
+# Iterate over all *_read.tex files in the directory
+for texfile in *_read.tex; do
+    echo "Compiling $texfile..."
+    pdflatex -interaction=nonstopmode "$texfile" > /dev/null
+
+    # Check if pdflatex succeeded
+    if [ $? -eq 0 ]; then
+        echo "$texfile compiled successfully."
+    else
+        echo "Failed to compile $texfile."
+    fi
+done
+
+echo "All files compiled."
+
+# Iterate over all PDF files in the directory
+for pdffile in *.pdf; do
+    # Extract base name without the extension
+    base_name="${pdffile%.pdf}"
+
+    echo "Converting $pdffile to PNG..."
+    pdftoppm -png -r 300 "$pdffile" "${base_name}"
+done
+
+# Convert .pdf to .png for all files in directory
+
+echo "Conversion pdf -> png completed."
+
 # Now, create mp4 files
+
+rm -f *.mp4
 
 # Iterate over all .mp3 files in the current directory
 for audio_file in *.mp3; do
@@ -56,7 +59,7 @@ for audio_file in *.mp3; do
         # Get the duration of the audio file in seconds
         audio_duration=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$audio_file")
         # Add a few extra seconds to the audio duration
-        extended_duration=$(echo "$audio_duration + 5" | bc)
+        extended_duration=$(echo "$audio_duration + 2" | bc)
 
         # Use ffmpeg to create video file from the image and audio files
         ffmpeg -loop 1 -framerate 1 -i "$image_file" -i "$audio_file" -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -t "$extended_duration" -shortest "$output_file"

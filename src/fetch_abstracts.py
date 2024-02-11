@@ -66,7 +66,7 @@ def correct_math_format(abstract):
 
 def latex_begin_end_strings():
     begin_string = r"""
-\documentclass{article}
+\documentclass[15pt]{extarticle}
 
 \usepackage[utf8]{inputenc} % Allows input to be in utf8
 \usepackage{amsmath}        % For mathematical symbols
@@ -182,10 +182,10 @@ def create_tex_string_for_single_paper(tex_file, index, total_papers, title, arx
     number_of_entry = f"Paper Number {index} out of {total_papers}\n"
 
     # Create a tex file entry with all necessary info
-    title_line = f"Title: {title}\n"
-    arxiv_line = f"Arxiv number:: {arxiv_number}\n"
-    authors_line = f"Authors: {authors}\n"
-    abstract_line = f"Abstract: {abstract}\n"
+    title_line = f"\\subsection*{{Title}}: \\textbf{{{title}}}\n\n"
+    arxiv_line = f"\\textbf{{Arxiv number}}: \\textbf{{{arxiv_number}}}\n\n"
+    authors_line = f"\\textbf{{Authors}}: \\textbf{{{authors}}}\n\n"
+    abstract_line = f"\\textbf{{Abstract}}: {abstract}\n\n"
     tex_file.write(number_of_entry + title_line + arxiv_line +  authors_line + abstract_line)
 
 def combine_into_speech_string(speech_tex_file, papers_info):

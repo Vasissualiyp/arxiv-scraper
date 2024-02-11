@@ -16,12 +16,12 @@ def create_movie_main():
     # Extract config
     config = extract_configuration('config/config.ini')
 
-    date = "2024-02-06"
+    date = "2024-02-07"
 
     related_papers = get_arxiv_numbers_for_date(config, date)
 
     # Now, put the papers to the json file, which will be later used to create the tex file
-    #dump_papers_to_json(related_papers, config)
+    dump_papers_to_json(related_papers, config)
     
     # Create a tex files with all relevant papers
     create_all_speech_files_main(config)
