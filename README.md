@@ -37,7 +37,10 @@ Edit the `config.ini` file in the `config` folder to customize settings:
 ## YouTube Video Uploader
 This tool allows you to upload videos to YouTube either from a desktop environment or a headless server. It uses OAuth 2.0 for authentication with Google's YouTube API v3. You can enable an option to upload the video of your scraping results in the `config.ini` file.
 
-The source code for the uploader is in `src/upload_yt_video.py`
+The source code for the uploader is in `src/upload_yt_video.py`.
+
+An example of YouTube channel that uses this daily automatic upload procedure is: https://www.youtube.com/channel/UCcyy48vdToDKAqlm-343VNw
+
 
 ### Setting Up
 
