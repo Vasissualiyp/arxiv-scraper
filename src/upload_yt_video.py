@@ -1,17 +1,12 @@
 import os
 import google.oauth2.credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
-
-# Set up OAuth 2.0
-SCOPES = ['https://www.googleapis.com/auth/youtube.upload']
-CLIENT_SECRETS_FILE = './config/credentials.json'
-
-import os
 import pickle
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
+import json
+from datetime import datetime
+from configuration import extract_configuration
 
 # Set up OAuth 2.0
 SCOPES = ['https://www.googleapis.com/auth/youtube.upload']
@@ -41,23 +36,16 @@ def get_authenticated_service():
         save_credentials(credentials)
     return build('youtube', 'v3', credentials=credentials)
 
-#def get_authenticated_service():
-#    flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRETS_FILE, SCOPES)
-#    # Use run_local_server instead of run_console
-#    credentials = flow.run_local_server(port=0)
-#    return build('youtube', 'v3', credentials=credentials)
-
-
-def initialize_upload(youtube, file):
+def initialize_upload(title, description, youtube, file):
     body = {
         'snippet': {
-            'title': 'Your Video Title',
-            'description': 'Video description here',
-            'tags': ['sample', 'video', 'tags'],
-            'categoryId': '22'  # Category ID 22 stands for People & Blogs. Change as needed.
+            'title': f"{title}",
+            'description': f"{description}",
+            'tags': ['astrophysics', 'stars', 'numerical simulations'],
+            'categoryId': '14'  # Category ID 14 stands for Science & Technology. Change as needed.
         },
         'status': {
-            'privacyStatus': 'private'  # Change to public or unlisted if needed
+            'privacyStatus': 'public'  # Change to public, private, or unlisted if needed
         }
     }
 
@@ -72,7 +60,40 @@ def initialize_upload(youtube, file):
     ).execute()
     print(f'Video uploaded. Video ID: {response_upload["id"]}')
 
-if __name__ == '__main__':
+def generate_video_title_and_description(config):
+
+    related_papers_json = config.RelatedPapersJson
+
+    # Generate video title with today's date
+    today_date = datetime.now().strftime("%Y-%m-%d")
+    video_title = f"arXiv summary for {today_date}"
+
+    # Load the related papers from the JSON file
+    with open(related_papers_json, 'r') as file:
+        related_papers = json.load(file)
+
+    # Initialize the description with a header
+    video_description = "Today's arXiv summaries include:\n\n"
+
+    # Add each paper to the description
+    for arxiv_id, paper_title in related_papers.items():
+        # Assuming arxiv_id is enough to generate the link; adjust if the structure is different
+        paper_link = f"https://arxiv.org/abs/{arxiv_id}"
+        video_description += f"{paper_title}: {paper_link}\n\n"
+
+    return video_title, video_description
+
+def main_video_upload():
+    
+    # Extract configuration from ini file
+    config = extract_configuration('config/config.ini')
+
+    # Generate video title and description
+    title, description = generate_video_title_and_description(config)
+
+    video_file_path = config.OutputVideoFile
     youtube = get_authenticated_service()
-    video_file_path = './workdir/separate_papers/relevant_papers.mp4'
-    initialize_upload(youtube, video_file_path)
+    initialize_upload(title, description, youtube, video_file_path)
+
+if __name__ == '__main__':
+    main_video_upload()

@@ -31,10 +31,12 @@ python ./src/main.py
 
 cd "$SCRIPT_DIR"
 
+python ./src/upload_yt_video.py
+
 # Move the files to the output folder
-cp "./workdir/$OUTPUT_TEX_FILE" "$OUTPUT_FOLDER"
-cp "./workdir/$OUTPUT_SPEECH_FILE" "$OUTPUT_FOLDER"
-cp "./workdir/$SEPARATE_PAPERS_FOLDER/$OUTPUT_VIDEO_FILE" "$OUTPUT_FOLDER"
+#cp "./workdir/$OUTPUT_TEX_FILE" "$OUTPUT_FOLDER"
+#cp "./workdir/$OUTPUT_SPEECH_FILE" "$OUTPUT_FOLDER"
+#cp "./workdir/$SEPARATE_PAPERS_FOLDER/$OUTPUT_VIDEO_FILE" "$OUTPUT_FOLDER"
 
 # Compile the document
 cd "$OUTPUT_FOLDER" || { echo "Output folder doesn't exist! Exiting..."; exit 1; }
