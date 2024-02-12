@@ -1,62 +1,46 @@
 import os
+import google.oauth2.credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
-from google_auth_oauthlib.flow import Flow
-import googleapiclient.discovery
-import googleapiclient.errors
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
 
-scopes = ["https://www.googleapis.com/auth/youtube.upload"]
+# Set up OAuth 2.0
+SCOPES = ['https://www.googleapis.com/auth/youtube.upload']
+CLIENT_SECRETS_FILE = './config/credentials.json'
 
-def upload_video(file_name, title, description, category_id, keywords, privacy_status):
-    # Disable OAuthlib's HTTPS verification when running locally.
-    os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+def get_authenticated_service():
+    flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRETS_FILE, SCOPES)
+    # Use run_local_server instead of run_console
+    credentials = flow.run_local_server(port=0)
+    return build('youtube', 'v3', credentials=credentials)
 
-    client_secrets_file = "./config/credentials.json"
-    scopes = ["https://www.googleapis.com/auth/youtube.upload"]
 
-    # Manually creating the flow
-    flow = InstalledAppFlow.from_client_secrets_file(
-        client_secrets_file,
-        scopes=scopes,
-        redirect_uri='urn:ietf:wg:oauth:2.0:oob')
-
-    # Generate the authorization URL for manual visit
-    auth_url, _ = flow.authorization_url(prompt='consent')
-
-    print("Please go to this URL and authorize access:", auth_url)
-    code = input("Enter the authorization code: ")
-    flow.fetch_token(code=code)
-
-    credentials = flow.credentials
-    youtube = googleapiclient.discovery.build("youtube", "v3", credentials=credentials)
-
-    request = youtube.videos().insert(
-        part="snippet,status",
-        body={
-            "snippet": {
-                "categoryId": category_id,
-                "description": description,
-                "title": title,
-                "tags": keywords.split(",")
-            },
-            "status": {
-                "privacyStatus": privacy_status
-            }
+def initialize_upload(youtube, file):
+    body = {
+        'snippet': {
+            'title': 'Your Video Title',
+            'description': 'Video description here',
+            'tags': ['sample', 'video', 'tags'],
+            'categoryId': '22'  # Category ID 22 stands for People & Blogs. Change as needed.
         },
-        media_body=googleapiclient.http.MediaFileUpload(file_name)
-    )
-    response = request.execute()
+        'status': {
+            'privacyStatus': 'private'  # Change to public or unlisted if needed
+        }
+    }
 
-    print("Upload successful. Response:", response)
+    # Replace with the path to your video file
+    video_file = file
+    media = MediaFileUpload(video_file, chunksize=-1, resumable=True, mimetype='video/mp4')
 
+    response_upload = youtube.videos().insert(
+        part='snippet,status',
+        body=body,
+        media_body=media
+    ).execute()
 
+    print(f'Video uploaded. Video ID: {response_upload["id"]}')
 
-if __name__ == "__main__":
-    file_name = "./workdir/separate_papers/relevant_papers.mp4"
-    title = "Test title"
-    description = "Test description"
-    category_id = "22"  # See https://developers.google.com/youtube/v3/docs/videoCategories/list
-    keywords = "keyword1,keyword2,keyword3"
-    privacy_status = "private"  # or "private" or "unlisted"
-
-    upload_video(file_name, title, description, category_id, keywords, privacy_status)
-
+if __name__ == '__main__':
+    youtube = get_authenticated_service()
+    video_file_path = './workdir/separate_papers/relevant_papers.mp4'
+    initialize_upload(youtube, video_file_path)
