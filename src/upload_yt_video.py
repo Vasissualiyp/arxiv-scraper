@@ -3,6 +3,7 @@ import google.oauth2.credentials
 import pickle
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from google.auth.transport.requests import Request
 from googleapiclient.http import MediaFileUpload
 import json
 from datetime import datetime
@@ -10,8 +11,20 @@ from configuration import extract_configuration
 
 # Set up OAuth 2.0
 SCOPES = ['https://www.googleapis.com/auth/youtube.upload']
+#SCOPES = ['https://www.googleapis.com/auth/youtube.upload', 'https://www.googleapis.com/auth/youtube.readonly']
 CLIENT_SECRETS_FILE = './config/credentials.json'
 CREDENTIALS_PICKLE_FILE = './config/token.pickle'  # Path to save credentials
+
+def list_video_categories(youtube):
+    # Replace 'US' with your country code if necessary
+    request = youtube.videoCategories().list(
+        part="snippet",
+        regionCode="US"
+    )
+    response = request.execute()
+
+    for category in response["items"]:
+        print(f'ID: {category["id"]} - Title: {category["snippet"]["title"]}')
 
 def save_credentials(credentials):
     with open(CREDENTIALS_PICKLE_FILE, 'wb') as token:
@@ -42,7 +55,7 @@ def initialize_upload(title, description, youtube, file):
             'title': f"{title}",
             'description': f"{description}",
             'tags': ['astrophysics', 'stars', 'numerical simulations'],
-            'categoryId': '14'  # Category ID 14 stands for Science & Technology. Change as needed.
+            'categoryId': '22'  # Category ID 14 stands for Science & Technology. Change as needed.
         },
         'status': {
             'privacyStatus': 'public'  # Change to public, private, or unlisted if needed
@@ -93,6 +106,7 @@ def main_video_upload():
 
     video_file_path = config.OutputVideoFile
     youtube = get_authenticated_service()
+    #list_video_categories(youtube)
     initialize_upload(title, description, youtube, video_file_path)
 
 if __name__ == '__main__':

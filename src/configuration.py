@@ -43,6 +43,6 @@ def extract_configuration(config_file):
     config.SpeechTexFile = os.path.join('workdir', config.SpeechTexFile)
     config.OutputSpeechFile = os.path.join('workdir', config.OutputSpeechFile)
     config.SeparatePapersFolder = os.path.join('workdir', config.SeparatePapersFolder)
-    config.OutputVideoFile = os.path.join('workdir', config.OutputVideoFile)
+    config.OutputVideoFile = os.path.join(config.SeparatePapersFolder, config.OutputVideoFile)
 
     return config

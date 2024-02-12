@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Prevent script from running on the weekend
+[ "$(date +%u)" -gt 5 ] && exit
+
 # Get the directory where the script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
@@ -20,18 +23,18 @@ eval OUTPUT_FOLDER=$OUTPUT_FOLDER
 cd "$SCRIPT_DIR"
 
 # Clean up the previous tex, mp3 and mp4 files
-rm -f "./workdir/$SEPARATE_PAPERS_FOLDER/*"
+rm -f "./workdir/$SEPARATE_PAPERS_FOLDER/*" > output.log
 
 # Run the script
 source ./env/bin/activate
-python ./src/main.py
+python ./src/main.py >> output.log
 
 # This script will create the video for YouTube
-./src/compile_all_papers.sh "$SEPARATE_PAPERS_FOLDER" "$OUTPUT_VIDEO_FILE"
+./src/compile_all_papers.sh "$SEPARATE_PAPERS_FOLDER" "$OUTPUT_VIDEO_FILE" >> output.log
 
 cd "$SCRIPT_DIR"
 
-python ./src/upload_yt_video.py
+python ./src/upload_yt_video.py >> output.log
 
 # Move the files to the output folder
 #cp "./workdir/$OUTPUT_TEX_FILE" "$OUTPUT_FOLDER"
