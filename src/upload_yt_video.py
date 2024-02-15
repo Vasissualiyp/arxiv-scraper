@@ -58,7 +58,7 @@ def initialize_upload(title, description, youtube, file):
             'categoryId': '22'  # Category ID 14 stands for Science & Technology. Change as needed.
         },
         'status': {
-            'privacyStatus': 'public'  # Change to public, private, or unlisted if needed
+            'privacyStatus': 'private'  # Change to public, private, or unlisted if needed
         }
     }
 

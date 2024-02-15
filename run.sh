@@ -14,7 +14,14 @@ OUTPUT_FOLDER=$(awk -F " = " '/OutputFinalFolder/ {print $2}' "$CONFIG_FILE")
 OUTPUT_TEX_FILE=$(awk -F " = " '/OutputTeXFile/ {print $2}' "$CONFIG_FILE")
 OUTPUT_SPEECH_FILE=$(awk -F " = " '/OutputSpeechFile/ {print $2}' "$CONFIG_FILE")
 SEPARATE_PAPERS_FOLDER=$(awk -F " = " '/SeparatePapersFolder/ {print $2}' "$CONFIG_FILE")
+SEPARATE_PAPERS_FOLDER="workdir/$SEPARATE_PAPERS_FOLDER"
 OUTPUT_VIDEO_FILE=$(awk -F " = " '/OutputVideoFile/ {print $2}' "$CONFIG_FILE")
+
+echo "OUTPUT_FOLDER: $OUTPUT_FOLDER"
+echo "OUTPUT_TEX_FILE: $OUTPUT_TEX_FILE"
+echo "OUTPUT_SPEECH_FILE: $OUTPUT_SPEECH_FILE"
+echo "SEPARATE_PAPERS_FOLDER: $SEPARATE_PAPERS_FOLDER"
+echo "OUTPUT_VIDEO_FILE: $OUTPUT_VIDEO_FILE"
 
 # Ensure OUTPUT_FOLDER is evaluated for variables such as $HOME
 eval OUTPUT_FOLDER=$OUTPUT_FOLDER
@@ -23,18 +30,18 @@ eval OUTPUT_FOLDER=$OUTPUT_FOLDER
 cd "$SCRIPT_DIR"
 
 # Clean up the previous tex, mp3 and mp4 files
-rm -f "./workdir/$SEPARATE_PAPERS_FOLDER/*" > output.log
+rm -f "./$SEPARATE_PAPERS_FOLDER/*" &> output.log
 
 # Run the script
 source ./env/bin/activate
-python ./src/main.py >> output.log
+python ./src/main.py &>> output.log
 
 # This script will create the video for YouTube
-./src/compile_all_papers.sh "$SEPARATE_PAPERS_FOLDER" "$OUTPUT_VIDEO_FILE" >> output.log
+./src/compile_all_papers.sh "$SEPARATE_PAPERS_FOLDER" "$OUTPUT_VIDEO_FILE" &>> output.log
 
 cd "$SCRIPT_DIR"
 
-python ./src/upload_yt_video.py >> output.log
+python ./src/upload_yt_video.py &>> output.log
 
 # Move the files to the output folder
 #cp "./workdir/$OUTPUT_TEX_FILE" "$OUTPUT_FOLDER"

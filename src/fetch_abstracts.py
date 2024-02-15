@@ -66,7 +66,7 @@ def correct_math_format(abstract):
 
 def latex_begin_end_strings():
     begin_string = r"""
-\documentclass[20pt]{extarticle}
+\documentclass[17pt]{extarticle}
 
 \usepackage[utf8]{inputenc} % Allows input to be in utf8
 \usepackage{amsmath}        % For mathematical symbols
@@ -182,7 +182,7 @@ def create_tex_string_for_single_paper(tex_file, index, total_papers, title, arx
     number_of_entry = f"Paper Number {index} out of {total_papers}\n"
 
     # Create a tex file entry with all necessary info
-    title_line = f"\\section*{{{Title}}}\n\n"
+    title_line = f"\\section*{{{title}}}\n\n"
     arxiv_line = f"\\textbf{{Arxiv number}}: \\textbf{{{arxiv_number}}}\n\n"
     authors_line = f"\\textbf{{Authors}}: \\textbf{{{authors}}}\n\n"
     abstract_line = f"\\textbf{{Abstract}}: {abstract}\n\n"

@@ -9,8 +9,6 @@ from scrape_pages import scrape_arxiv_new_submissions
 from scrape_pages import scrape_arxiv_abstract
 from doc_to_speech import tts_main
 from doc_to_speech import tts_with_video_main
-from create_movie import create_video_files
-from create_movie import combine_videos
 
 def main(date = "current", combined_file_flag = False):
     """
@@ -76,8 +74,17 @@ def main(date = "current", combined_file_flag = False):
         create_all_speech_files_main(config)
         
         # Create speech and tex files
-        tts_with_video_main(config)
+        #tts_with_video_main(config)
 
+def get_date_from_args()
+    # Check if any arguments were passed (beyond the script name)
+    if len(sys.argv) > 1:
+        date = sys.argv[1]  # Set date to the first argument
+    else:
+        date = 'current'  # Set date to 'current' if no arguments are passed
+    return date
+    
 if __name__ == '__main__':
-    main(date = 'current', combined_file_flag = False)
+    date = get_date_from_args()
+    main(date = date, combined_file_flag = False)
 

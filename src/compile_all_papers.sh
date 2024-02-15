@@ -5,7 +5,8 @@ SEPARATE_PAPERS_FOLDER="$1"
 OUTPUT_VIDEO_FILE="$2"
 
 # Change to the directory to the one with all the .tex and .mp3 files
-cd "./workdir/$SEPARATE_PAPERS_FOLDER"
+echo "cd ./"$SEPARATE_PAPERS_FOLDER
+cd "./$SEPARATE_PAPERS_FOLDER"
 
 # Convert .tex to .pdf for all files in directory
 
