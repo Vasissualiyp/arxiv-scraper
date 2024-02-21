@@ -6,6 +6,9 @@
 # Get the directory where the script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 OUTPUT_LOGFILE="./output.log"
+# If you want the output to the console
+# OUTPUT_LOGFILE="/dev/tty"
+
 
 # Path to the config file
 CONFIG_FILE="$SCRIPT_DIR/config/config.ini"
@@ -33,20 +36,20 @@ echo "Now in $SCRIPT_DIR" &> $OUTPUT_LOGFILE
 
 # Clean up the previous tex, mp3 and mp4 files
 rm -f "./$SEPARATE_PAPERS_FOLDER/*" 
-echo " Removed all the files from ./$SEPARATE_PAPERS_FOLDER" &>> $OUTPUT_LOGFILE
+echo " Removed all the files from ./$SEPARATE_PAPERS_FOLDER" 
 
 # Run the script
 source ./env/bin/activate
-echo "Running the main python script..." &>> $OUTPUT_LOGFILE
-python ./src/main.py &>> $OUTPUT_LOGFILE
-echo "Finished running the main python script. Now, compiling the papers..." &>> $OUTPUT_LOGFILE
+echo "Running the main python script..." 
+python ./src/main.py 
+echo "Finished running the main python script. Now, compiling the papers..." 
 
 # This script will create the video for YouTube
-./src/compile_all_papers.sh "$SEPARATE_PAPERS_FOLDER" "$OUTPUT_VIDEO_FILE" &>> $OUTPUT_LOGFILE
+./src/compile_all_papers.sh "$SEPARATE_PAPERS_FOLDER" "$OUTPUT_VIDEO_FILE" 
 
 cd "$SCRIPT_DIR"
 
-python ./src/upload_yt_video.py &>> $OUTPUT_LOGFILE
+python ./src/upload_yt_video.py 
 
 # Move the files to the output folder
 #cp "./workdir/$OUTPUT_TEX_FILE" "$OUTPUT_FOLDER"
