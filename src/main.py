@@ -9,6 +9,8 @@ from scrape_pages import scrape_arxiv_new_submissions
 from scrape_pages import scrape_arxiv_abstract
 from doc_to_speech import tts_main
 from doc_to_speech import tts_with_video_main
+import sys
+import os
 
 def main(date = "current", combined_file_flag = False):
     """
@@ -51,7 +53,7 @@ def main(date = "current", combined_file_flag = False):
         # Scrape arxiv for recent papers
         papers = scrape_arxiv_new_submissions(config.ArxivURL)
         #archived_list_filename = 'workdir/archive.csv'
-        #write_tuples_to_csv(papers, config)
+        write_tuples_to_csv(papers, config)
         
         # Categorize recent papers with ChatGPT
         related_papers = ai_categorization_main(papers, config)
@@ -59,9 +61,12 @@ def main(date = "current", combined_file_flag = False):
 
     else:
         related_papers = get_arxiv_numbers_for_date(config, date)
+    print("Finished categorizing the papers")
 
     # Now, put the papers to the json file, which will be later used to create the tex file
     dump_papers_to_json(related_papers, config)
+
+    print("Dumped papers to json. Now, combining the paper info and creating mp3/mp4...")
     
     if combined_file_flag: 
         # Create a tex file with all relevant papers
@@ -74,9 +79,11 @@ def main(date = "current", combined_file_flag = False):
         create_all_speech_files_main(config)
         
         # Create speech and tex files
-        #tts_with_video_main(config)
+        tts_with_video_main(config)
 
-def get_date_from_args()
+    print("Finished creating mp3")
+
+def get_date_from_args():
     # Check if any arguments were passed (beyond the script name)
     if len(sys.argv) > 1:
         date = sys.argv[1]  # Set date to the first argument

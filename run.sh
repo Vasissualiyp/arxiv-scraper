@@ -5,6 +5,7 @@
 
 # Get the directory where the script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+OUTPUT_LOGFILE="./output.log"
 
 # Path to the config file
 CONFIG_FILE="$SCRIPT_DIR/config/config.ini"
@@ -28,20 +29,24 @@ eval OUTPUT_FOLDER=$OUTPUT_FOLDER
 
 # cd into the script directory, if haven't done that already
 cd "$SCRIPT_DIR"
+echo "Now in $SCRIPT_DIR" &> $OUTPUT_LOGFILE
 
 # Clean up the previous tex, mp3 and mp4 files
-rm -f "./$SEPARATE_PAPERS_FOLDER/*" &> output.log
+rm -f "./$SEPARATE_PAPERS_FOLDER/*" 
+echo " Removed all the files from ./$SEPARATE_PAPERS_FOLDER" &>> $OUTPUT_LOGFILE
 
 # Run the script
 source ./env/bin/activate
-python ./src/main.py &>> output.log
+echo "Running the main python script..." &>> $OUTPUT_LOGFILE
+python ./src/main.py &>> $OUTPUT_LOGFILE
+echo "Finished running the main python script. Now, compiling the papers..." &>> $OUTPUT_LOGFILE
 
 # This script will create the video for YouTube
-./src/compile_all_papers.sh "$SEPARATE_PAPERS_FOLDER" "$OUTPUT_VIDEO_FILE" &>> output.log
+./src/compile_all_papers.sh "$SEPARATE_PAPERS_FOLDER" "$OUTPUT_VIDEO_FILE" &>> $OUTPUT_LOGFILE
 
 cd "$SCRIPT_DIR"
 
-python ./src/upload_yt_video.py &>> output.log
+python ./src/upload_yt_video.py &>> $OUTPUT_LOGFILE
 
 # Move the files to the output folder
 #cp "./workdir/$OUTPUT_TEX_FILE" "$OUTPUT_FOLDER"
@@ -52,7 +57,7 @@ python ./src/upload_yt_video.py &>> output.log
 cd "$OUTPUT_FOLDER" || { echo "Output folder doesn't exist! Exiting..."; exit 1; }
 #pdflatex -interaction=nonstopmode "$OUTPUT_TEX_FILE"
 
-# Cleanup the folder - only leave .tex, .pdf, and .mp3 files
+# Cleanup the folder - only leave .tex, .pdf, .mp4 and .mp3 files
 for file in *; do
     if [[ ! $file =~ \.tex$ ]] && [[ ! $file =~ \.pdf$ ]] && [[ ! $file =~ \.mp3$ ]] && [[ ! $file =~ \.mp4$ ]]; then
         rm "$file"
