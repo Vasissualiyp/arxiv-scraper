@@ -1,4 +1,5 @@
 import os
+import re
 import google.oauth2.credentials
 import pickle
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -91,7 +92,13 @@ def generate_video_title_and_description(config):
     # Add each paper to the description
     for arxiv_id, paper_title in related_papers.items():
         # Assuming arxiv_id is enough to generate the link; adjust if the structure is different
-        paper_link = f"https://arxiv.org/abs/{arxiv_id}"
+        #paper_link = f"https://arxiv.org/abs/{arxiv_id}"
+        #Making the description ssafer by removing all extra characters. Otherwise it doesn't upload. Testing still in progress.
+        paper_link = arxiv_id
+        paper_title = paper_title.replace('$', '')
+        paper_title = paper_title.replace('^', '')
+        paper_title = paper_title.replace('{', '')
+        paper_title = paper_title.replace('}', '')
         video_description += f"{paper_title}: {paper_link}\n\n"
 
     return video_title, video_description
@@ -103,6 +110,12 @@ def main_video_upload():
 
     # Generate video title and description
     title, description = generate_video_title_and_description(config)
+    print(len(description))
+    print(description)
+
+    urls = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', description)
+    if not all(urls):
+        print("One or more URLs may be incorrectly formatted.")
 
     video_file_path = config.OutputVideoFile
     youtube = get_authenticated_service()
