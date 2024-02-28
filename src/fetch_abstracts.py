@@ -66,7 +66,7 @@ def correct_math_format(abstract):
 
 def latex_begin_end_strings():
     begin_string = r"""
-\documentclass[17pt]{extarticle}
+\documentclass[14pt]{extarticle}
 
 \usepackage[utf8]{inputenc} % Allows input to be in utf8
 \usepackage{amsmath}        % For mathematical symbols
@@ -75,7 +75,7 @@ def latex_begin_end_strings():
 \usepackage{geometry}       % For setting margins
 
 % Set the page margins to 1 inch all around:
-\geometry{letterpaper, portrait, margin=1in}
+\geometry{letterpaper, portrait, margin=0.5in}
 
 \begin{document}
     """
